@@ -2,45 +2,29 @@ package service
 
 import javax.jdo.PersistenceManager
 import javax.jdo.Query
-import javax.jdo.Transaction
 
 import com.arteco.valoranet.model.Person
 
 
-public class PersonService{
 
-	private PersistenceManager pm;
+public class PersonService extends BaseService{
 
 	public PersonService(PersistenceManager pm){
-		this.pm = pm;
+		super(pm);
 	}
 
 	public List<Person> getList(){
-		Transaction tx=pm.currentTransaction();
-		try {
-			tx.begin();
+		return execTrans({
 			Query q = pm.newQuery("SELECT FROM " + Person.class.getName());
 			List<Person> people = (List<Person>)q.execute();
-			tx.commit();
 			return people;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-		}
+		});
 	}
 
 
 	public void savePerson(Person p){
-		Transaction tx=pm.currentTransaction();
-		try {
-			tx.begin();
+		execTrans({
 			pm.makePersistent(p);
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-		}
+		});
 	}
 }
