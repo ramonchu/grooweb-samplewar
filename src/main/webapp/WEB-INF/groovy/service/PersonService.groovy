@@ -19,15 +19,25 @@ public class PersonService{
 		Transaction tx=pm.currentTransaction();
 		try {
 			tx.begin();
-
 			Query q = pm.newQuery("SELECT FROM " + Person.class.getName());
 			List<Person> people = (List<Person>)q.execute();
-
 			tx.commit();
-
 			return people;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
 		}
-		finally {
+	}
+
+
+	public void savePerson(Person p){
+		Transaction tx=pm.currentTransaction();
+		try {
+			tx.begin();
+			pm.makePersistent(p);
+			tx.commit();
+		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
 			}

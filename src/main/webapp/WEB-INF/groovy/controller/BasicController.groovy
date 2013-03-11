@@ -9,6 +9,7 @@ import com.arteco.grooweb.web.GrooController
 import com.arteco.grooweb.web.GrooMap
 import com.arteco.grooweb.web.GrooRequestMethod
 import com.arteco.grooweb.web.GrooRole
+import com.arteco.valoranet.model.Person;
 
 import form.BasicForm
 import service.PersonService
@@ -26,6 +27,15 @@ public class BasicController extends GrooController{
 	@GrooMap("/listPeople.json")
 	public Object listPeople(){
 		return personService.getList();
+	}
+	
+	@GrooMap("/addPerson.json")
+	public Object addPerson(){
+		Person p = new Person();
+		p.setName("Ramón")
+		p.setSurname("Arnau")
+		personService.savePerson(p);
+		return true;
 	}
 
 	class JsonObj{
